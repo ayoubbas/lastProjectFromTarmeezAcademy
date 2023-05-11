@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>المشروع النهائي</title>
+
+    <link
+      rel="stylesheet"
+      href="./node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./node_modules/bootstrap-icons/font/bootstrap-icons.css"
+    />
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "Roboto", sans-serif;
+      }
+      .container {
+        width: 60%;
+      }
+      .tags {
+        display: flex;
+
+      }
+      .alert {
+        position: fixed;
+        bottom: 20px;
+        right: 10px;
+        width: 300px;
+      }
+      .tags p {
+        padding: 5px 10px;
+        background-color: rgb(29, 27, 27);
+        color: white;
+        border-radius: 10px;
+        margin: 0 5px;
+        font-size: 14px;
+      }  
+      #imgProfileHeader {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+
+
+      } 
+      .plusIcon{
+        background-color: blue;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        text-align: center;
+        position: fixed;
+        right: 30px;
+        bottom: 30px;
+        cursor: pointer;
+        
+      }
+      .bi-plus {
+        color: white;
+        line-height: 40px;
+        font-size: 30px;
+      } 
+      /* .bi-pen-fill{
+        color: white;
+        line-height: 40px;
+        font-size: 16px;
+      } */
+    </style>
+  </head>
+  <body style="background-color: #f0ecff">
+
+    <div  data-bs-toggle="modal"
+    data-bs-target="#addPostModal" id="plusIcon" class="plusIcon ">
+      <i class="bi bi-plus"></i>
+    </div>
+
+
+    <!-- //! modal of deleeeeeeeeeete a post -->
+    <div
+      class="modal fade"
+      id="delePostModal"
+      tabindex="-1"
+      aria-labelledby="delePostModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="deleModalLabel">Delete my Post</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <p>Do you want to delete the post realy !!!</p>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" id="delePostBtnForm" class="btn btn-danger">yes delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //! modal of updaaaaaaaaaaate a post -->
+    <div
+      class="modal fade"
+      id="editPostModal"
+      tabindex="-1"
+      aria-labelledby="editPostModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="editModalLabel">Update my Post</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                
+                <input type="text" class="form-control" placeholder="Title" id="titleUpdate" />
+              </div>
+              <div class="mb-3">
+                
+                <!-- <input type="text" class="form-control" placeholder="Body..." id="body" /> -->
+                <textarea name="" id="bodyUpdate" placeholder="tape your body ..." style="width: 100%; height: 40px;" ></textarea>
+              </div>
+            
+              <div class="mb-3">
+                <input type="file" class="form-control" name=""  accept="image/png, image/gif, image/jpeg"  id="imgUpdatePost">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" id="editPostBtnForm" class="btn btn-primary">Edit Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //! modal of add a post -->
+    <div
+      class="modal fade"
+      id="addPostModal"
+      tabindex="-1"
+      aria-labelledby="addPostModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="PostModalLabel">Add Post</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                
+                <input type="text" class="form-control" placeholder="Title" id="title" />
+              </div>
+              <div class="mb-3">
+                
+                <!-- <input type="text" class="form-control" placeholder="Body..." id="body" /> -->
+                <textarea name="" id="body" placeholder="tape your body ..." style="width: 100%; height: 40px;" ></textarea>
+              </div>
+            
+              <div class="mb-3">
+                <input type="file" class="form-control" name=""  accept="image/png, image/gif, image/jpeg"  id="imgPost">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" id="addPostBtnForm" class="btn btn-primary">Add Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- // modal of add a post// -->
+
+    <!-- modals of login and register -->
+    <!--//! modal of login //-->
+
+
+    <div
+      class="modal fade"
+      id="loginModal"
+      tabindex="-1"
+      aria-labelledby="loginModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+               
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                
+                <input type="text" class="form-control" placeholder="Emil Address" id="emailLogin" />
+              </div>
+              <div class="mb-3">
+                <input type="password" class="form-control" name="" placeholder="***********" id="passLogin">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" id="loginBtnForm"  class="btn btn-success">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--// modal of login //-->
+
+
+    <!--//! register Form //-->
+    <div
+      class="modal fade"
+      id="registerModal"
+      tabindex="-1"
+      aria-labelledby="registerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Register</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                
+                <input type="text" class="form-control" placeholder="username" id="emailregister" />
+              </div>
+              <div class="mb-3">
+                
+                <input type="text" class="form-control" placeholder="Name" id="namePerson" />
+              </div>
+              <div class="mb-3">
+                <input type="password" class="form-control" name="" placeholder="***********" id="passRegister">
+              </div>
+              <div class="mb-3">
+                <input type="file" class="form-control" name=""  accept="image/png, image/gif, image/jpeg"  id="imgProfile">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" id="registerBtnForm" class="btn btn-primary">Register</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- register Form //-->
+    <!-- modals of login and register -->
+
+    <!-- start navbar FIXME:-->
+
+    <div class="container">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary shadow rounded">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="home.html">Tarmeeeeez</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="./home.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" onclick="showMyPro()" href="./profile.html">Profile</a>
+              </li>
+            </ul>
+            <div class="d-flex align-items-center">
+
+              <div class="loginAndRegister">
+                <button id="loginBtnHeader" class="btn btn-outline-success mx-3" data-bs-toggle="modal"
+                data-bs-target="#loginModal">Login</button>
+                <button  data-bs-toggle="modal" data-bs-target="#registerModal" id="registerBtnHeader"  class="btn btn-outline-success">Register</button>
+
+              </div>
+
+             
+              <div class="logged d-none">
+                <img src="" id="imgProfileHeader" alt="">
+                <b id="username" class="mx-3"></b>
+                <button id="logout" class="btn btn-outline-danger">Log Out</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <!-- end navbar FIXME:-->
+
+    <!-- start posts !!!!!!!!-->
+
+    <div class="container">
+      <div class="cards">
+        <!-- card -->
+         <div class="card mt-5">
+          <div class="card-header">
+            <img
+              src="./img/hacker.png"
+              class="rounded-circle shadow"
+              style="width: 30px; height: 30px"
+              alt=""
+            /><b>@ayoubBos</b>
+          </div>
+          <div class="card-body">
+            <img
+              src="./img/tim-mossholder-YC6RVdoTtIk-unsplash.jpg"
+              class="w-100 rounded-top"
+              alt=""
+            />
+            <h6 style="color: gray; margin-top: 10px">2 min ago</h6>
+            <b>title Of Card</b>
+            <p class="card-text">
+              With supporting text below as a natural lead-in to additional
+              content.
+            </p>
+            <hr />
+            <div class="comments">
+              <i class="bi bi-pen-fill"></i> <span>(3) Comments </span>
+            </div>
+          </div>
+        </div> 
+
+        <!-- card -->
+          <div class="card mt-5">
+          <div class="card-header">
+            <img
+              src="./img/hacker.png"
+              class="rounded-circle shadow"
+              style="width: 30px; height: 30px"
+              alt=""
+            /><b>@ayoubBos</b>
+          </div>
+          <div class="card-body">
+            <img
+              src="./img/lily-banse--YHSwy6uqvk-unsplash.jpg"
+              class="w-100 rounded-top"
+              alt=""
+            />
+            <h6 style="color: gray; margin-top: 10px">2 min ago</h6>
+            <b>title Of Card</b>
+            <p class="card-text">
+              With supporting text below as a natural lead-in to additional
+              content.
+            </p>
+            <hr />
+            <div class="comments">
+              <i class="bi bi-pen-fill"></i> <span>(3) Comments </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+
+    <div id="alertOfAccount" data-bs-dismiss="alert" style="position: relative;z-index: 1000000;"></div>
+    <!-- end posts !!!!!!!!-->
+    
+
+   
+
+
+
+  </body>
+
+  <script>
+
+    
+
+  </script>
+  <script src="./script.js"></script>
+  <script src="./profile.js"></script>
+
+</html>
